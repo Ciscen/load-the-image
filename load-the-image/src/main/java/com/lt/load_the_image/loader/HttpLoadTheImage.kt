@@ -1,13 +1,14 @@
 package com.lt.load_the_image.loader
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import com.lt.load_the_image.LoadTheImageManager
 import com.lt.load_the_image.painter.AsyncImagePainter
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.skia.Image
 
@@ -22,7 +23,7 @@ open class HttpLoadTheImage : LoadTheImage {
     override fun load(data: DataToBeLoaded): Painter? {
         val url = data.data as? String ?: return null
         val painter = remember(url) { AsyncImagePainter() }
-        LaunchedEffect(url) {
+        rememberCoroutineScope().launch {
             withContext(Dispatchers.IO) {
                 //Use cache
                 var byteArray =
